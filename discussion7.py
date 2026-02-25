@@ -32,14 +32,15 @@ def load_listings(f):
 
     # TODO: Read the CSV using csv.reader and convert it to a list a dictionaries
     listings = []
-    with open(full_path, 'r', newline='') as file:
-        reader = csv.DictReader(file)
-        header = next(reader)
-        for row in reader:
-            listing = {}
-            for i in range(len(header)):
-                listing[header[i]] = row[i]
-            listings.append(listing)
+    file = open("new_york_listings_2024.csv", 'r', newline='')
+    reader = csv.reader(file)
+    header = next(reader)
+    for row in reader:
+        listing = {}
+        for i in range(len(header)):
+            listing[header[i]] = row[i]
+        listings.append(listing)
+    file.close()
     return listings
 
 ###############################################################################
@@ -75,12 +76,10 @@ def calculate_avg_price_by_neighbourhood_group_and_room(listings):
         totals[key] += price
         counts[key] += 1
 
-        avg_prices = {}
-        for key in totals:
-            avg_prices[key] = totals[key] / counts[key]
-        return avg_prices
-
-
+    avg_prices = {}
+    for key in totals:
+        avg_prices[key] = totals[key] / counts[key]
+    return avg_prices
 
 ###############################################################################
 ##### TASK 3: CSV WRITER
@@ -100,7 +99,14 @@ def write_summary_csv(out_filename, avg_prices):
         None
             Writes a CSV file with header: neighbourhood_group, room_type, average_price
     """
-    pass
+    file = open(out_filename, 'w', newline='')
+    writer = csv.writer(file)
+    writer.writerow(['neighbourhood_group', 'room_type', 'average_price'])
+    for (neighbourhood_group, room_type), average_price in avg_prices.items():
+        writer.writerow([neighbourhood_group, room_type, average_price])
+    file.close()
+
+
 
 ###############################################################################
 ##### UNIT TESTS (Do not modify the code below!)
